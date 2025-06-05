@@ -15,7 +15,7 @@ def luminance(colorarray):
         np.float64: The relative luminance value of the color.
     """
     
-    colorarray = colorarray/255 
+    colorarray = colorarray/255 # does not account for 8 bit
     
     luminance_array = list(map(lambda x: x/12.92 if x <= 0.04045 else ((x+0.055)/1.055) ** 2.4 ,colorarray))
    

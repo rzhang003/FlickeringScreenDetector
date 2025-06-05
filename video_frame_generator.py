@@ -7,9 +7,17 @@ from helper_function import luminance
 capture = cv2.VideoCapture(r"C:\Users\PC\Downloads\Pokemon EP38 - Electric Soldier Porygon + ENG Subtitles - Trim.mp4") # tehcnically an array of numpyndarray (frames)
 
 f = 0
+last_frame_luminance = -1
+flicker_count = 0
+luminance_array = []
+
+lp = 0 # left pointer for sliding window
+rp = 0 # right pointer for sliding window
 
 fps = int(capture.get(cv2.CAP_PROP_FPS))
-print(fps)
+
+sliding_window_size = max(60, fps) # at most looks a 60 frames per second. based off definition that flickering should be between 3 and 60 Hz. 
+
 
 
 while(capture.isOpened()):
@@ -43,7 +51,27 @@ while(capture.isOpened()):
 
     # given relative_luminance, we compare with the last frame to determine if there was a flicker at the current frame. This is if contrast is above 3:1 threshold. 
 
+    # case if we have max sliding window size
+    if rp - lp >= sliding_window_size:
 
+
+        
+
+    # case if window size is not maxed out
+    else: 
+        if last_frame_luminance == -1: # this is the first frame analyzed so don't worry
+            last_frame_luminance = relative_luminance
+            rp += 1
+            continue
+        contrast_ratio = max(relative_luminance, last_frame_luminance) / min(relative_luminance, last_frame_luminance)
+
+
+        if (contrast_ratio >= 3.0):
+            flicker_count += 1
+        rp += 1
+
+
+    last_frame_luminance = relative_luminance
     
 
 
