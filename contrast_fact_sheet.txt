@@ -1,0 +1,12 @@
+trying to find the threshold for a flicker, figured I should look at the definition of "high contrast"
+
+by the the WCAG, high constract is a contrast ratio of 3:1 for large text. Given that I'm currently averaging the colour of a screen, I'll use the lowest ratio for my anaylsis.
+
+
+Contrast ratio is defined as the ratio between luminance of two colours.
+
+Luminance of a colour, according to WCAG2 for the standard RGB workspace is L = 0.2126 * R + 0.7152 * G + 0.0722 * B, where R, G, B are defined by: 
+
+if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
+if GsRGB <= 0.03928 then G = GsRGB/12.92 else G = ((GsRGB+0.055)/1.055) ^ 2.4
+if BsRGB <= 0.03928 then B = BsRGB/12.92 else B = ((BsRGB+0.055)/1.055) ^ 2.4
