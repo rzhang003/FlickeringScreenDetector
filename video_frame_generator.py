@@ -117,11 +117,24 @@ while(capture.isOpened()):
 print(flashes)
 print(flicker_values)
     
-
-plt.plot([x for x in range(len(contrast_values))], contrast_values)
+x = [x for x in range(len(contrast_values))]
+plt.plot(x, contrast_values, label="contrast-values")
 plt.axhline(y=3, color='r', linestyle='-')
 plt.xlabel('Frame Number')
 plt.ylabel('Contrast Values')
+
+
+
+
+plt.title('Contrast values in Episode')
+
+# function to show the plot
+plt.show()
+
+plt.plot(x, flicker_values, label="flicker-values")
+plt.axhline(y=16, color='r', linestyle='-')
+plt.xlabel('Frame Number')
+plt.ylabel('Flicker Values within ' + str(sliding_window_size) + ' frame range')
 
 
 
