@@ -11,10 +11,12 @@ capture = cv2.VideoCapture(r"C:\Users\PC\Downloads\Pokemon EP38 - Electric Soldi
 f = 0
 last_frame_luminance = -1
 flicker_count = 0
-max_flicker_count = 0
+flashes = 0
 luminance_queue = deque()
-
+flag = 0
+threshold = 16
 contrast_values = []
+flicker_values = []
 lp = 0 # left pointer for sliding window
 rp = 0 # right pointer for sliding window
 
@@ -59,12 +61,15 @@ while(capture.isOpened()):
     
     
     if rp - lp >= sliding_window_size:
-        contrast_ratio = max(relative_luminance, last_frame_luminance) / min(relative_luminance, last_frame_luminance)
-        print(f, contrast_ratio)
+        contrast_ratio = (max(relative_luminance, last_frame_luminance) + 0.05) / (min(relative_luminance, last_frame_luminance) + 0.05)
+  
 
         if (contrast_ratio >= 3.0):
             flicker_count += 1
-            max_flicker_count = max(flicker_count, max_flicker_count)
+            if flicker_count >= threshold and flag == 0:
+                flashes += 1
+                flag = 1
+
         last_frame_luminance = relative_luminance
         luminance_queue.append(relative_luminance)
         rp += 1
@@ -75,10 +80,12 @@ while(capture.isOpened()):
 
         removed_luminance = luminance_queue.popleft()
 
-        contrast_ratio = max(removed_luminance, luminance_queue[0]) / min(removed_luminance, luminance_queue[0]) # check to see if the removed item has a flicker with its neighbor
+        contrast_ratio = (max(removed_luminance, luminance_queue[0]) + 0.05) / (min(removed_luminance, luminance_queue[0]) + 0.05) # check to see if the removed item has a flicker with its neighbor
 
         if (contrast_ratio >= 3.0):
             flicker_count -= 1
+            if flicker_count < threshold and flag == 1:
+                flag = 0
         
         lp += 1
         
@@ -90,25 +97,29 @@ while(capture.isOpened()):
             luminance_queue.append(relative_luminance)
             rp += 1
             continue
-        contrast_ratio = max(relative_luminance, last_frame_luminance) / min(relative_luminance, last_frame_luminance)
+        contrast_ratio = (max(relative_luminance, last_frame_luminance) + 0.05) / (min(relative_luminance, last_frame_luminance) + 0.05)
 
 
         if (contrast_ratio >= 3.0):
             flicker_count += 1
-            max_flicker_count = max(flicker_count, max_flicker_count)
+            if flicker_count >= threshold and flag == 0:
+                flashes += 1
+                flag = 1
         contrast_values.append(contrast_ratio)
         last_frame_luminance = relative_luminance
         luminance_queue.append(relative_luminance)
         rp += 1
     f += 1
+    flicker_values.append(flicker_count)
 
 
     
-print(max_flicker_count)
+print(flashes)
+print(flicker_values)
     
 
 plt.plot([x for x in range(len(contrast_values))], contrast_values)
-
+plt.axhline(y=3, color='r', linestyle='-')
 plt.xlabel('Frame Number')
 plt.ylabel('Contrast Values')
 
