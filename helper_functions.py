@@ -1,3 +1,4 @@
+import numpy as np
 
 def luminance(colorarray):
     """Calculates the relative luminance of an RGB color.
@@ -17,7 +18,12 @@ def luminance(colorarray):
     
     colorarray = colorarray/255 # does not account for 8 bit
     
-    luminance_array = list(map(lambda x: x/12.92 if x <= 0.04045 else ((x+0.055)/1.055) ** 2.4 ,colorarray))
+    
+    luminance_array = np.where(
+        colorarray <= 0.04045,
+        colorarray / 12.92,
+        ((colorarray + 0.055) / 1.055) ** 2.4
+    )
    
     relative_luminance = 0.2126 * luminance_array[0] + 0.7152 * luminance_array[1] + 0.0722 * luminance_array[2]
 

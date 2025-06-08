@@ -1,10 +1,25 @@
 # takes a video, decompiles it into different frames and then stores the raw pixel data. 
 
 import cv2
-from helper_function import luminance
+from helper_functions import luminance
 from collections import deque
 import matplotlib.pyplot as plt
 
+
+
+
+def video_frame_parser(capture):
+    fps = int(capture.get(cv2.CAP_PROP_FPS))
+    sliding_window_size = max(60, fps) # at most looks a 60 frames per second. based off definition that flickering should be between 3 and 60 Hz. 
+
+    frame_array = []
+    while(capture.isOpened()):
+        ret, frame = capture.read() # frame shape is 480, 640, 3 so 480 height, 640 width, 3 colour channels
+
+        if ret == False:
+            break
+        frame_array.append(frame)
+    return frame_array, sliding_window_size
 
 capture = cv2.VideoCapture(r"C:\Users\PC\Downloads\Pokemon EP38 - Electric Soldier Porygon + ENG Subtitles - Trim.mp4") # tehcnically an array of numpyndarray (frames)
 
@@ -37,8 +52,8 @@ while(capture.isOpened()):
     # want to analyse each frame in a sliding window maybe? determining the amount of drastic color switches in scene ex primarly red vs primarily blue and then comparing to 
     # to a thrsdhol amount set by scietnitsts 
     
-    fh = frame.shape[0] # height
-    fw = frame.shape[1] #width
+    # fh = frame.shape[0] # height
+    # fw = frame.shape[1] #width
 
     # timescale =  # what is 1 frame IN SECONDS WE TAKE FRAMERATE TO 
     
