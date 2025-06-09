@@ -15,6 +15,8 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
     Returns:
         trigger_sections (list[tuple(int, int)]: An array-like object counting tuples of start and end times of 
         trigger sections
+
+    TODO: Implement trigger_sections, implement video overview system
     """
 
     f = 0
@@ -26,6 +28,10 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
     contrast_values = []
     flicker_values = []
     lp, rp = 0, 0
+    trigger_sections = []
+
+    start_frame = 0
+    end_frame = 0
 
     for frame in frame_array:
         average_frame_colour = frame.mean(axis=(0,1))
@@ -48,6 +54,7 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
                 if flicker_count >= threshold and flag == 0:
                     flashes += 1
                     flag = 1
+                    start_frame = f
 
             last_frame_luminance = relative_luminance
             luminance_queue.append(relative_luminance)
@@ -65,6 +72,8 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
                 flicker_count -= 1
                 if flicker_count < threshold and flag == 1:
                     flag = 0
+                    end_frame = f
+                    trigger_sections.append((start_frame, end_frame))
             
             lp += 1
             
@@ -84,6 +93,7 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
                 if flicker_count >= threshold and flag == 0:
                     flashes += 1
                     flag = 1
+                    start_frame = f
             contrast_values.append(contrast_ratio)
             last_frame_luminance = relative_luminance
             luminance_queue.append(relative_luminance)
@@ -91,7 +101,7 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
         f += 1
         flicker_values.append(flicker_count)
 
-
+    print(trigger_sections)
         
     print(flashes)
     print(flicker_values)

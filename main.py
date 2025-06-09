@@ -6,7 +6,9 @@ from flicker_count_detector import flicker_counter
 def main(): 
 
 
-    path = r"C:\Users\PC\Downloads\ScreenRecording_06-08-2025_14-07-25_1.mov"
+    #path = r"C:\Users\PC\Downloads\ScreenRecording_06-08-2025_14-07-25_1.mov"
+
+    path = r"C:\Users\PC\Downloads\Pokemon EP38 - Electric Soldier Porygon + ENG Subtitles - Trim.mp4"
     capture = cv2.VideoCapture(path) # tehcnically an array of numpyndarray (frames)
     print(path)
     frame_array, sliding_window_size = video_frame_parser(capture)
@@ -18,3 +20,5 @@ def main():
 if __name__ == '__main__':
     print(4)
     main()
+
+    
