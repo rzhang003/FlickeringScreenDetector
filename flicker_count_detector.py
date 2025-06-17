@@ -100,12 +100,7 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
             rp += 1
         f += 1
         flicker_values.append(flicker_count)
-
-    print(trigger_sections)
-        
-    print(flashes)
-    print(flicker_values)
-        
+       
     x = [x for x in range(len(contrast_values))]
     plt.plot(x, contrast_values, label="contrast-values")
     plt.axhline(y=3, color='r', linestyle='-')
@@ -132,3 +127,6 @@ def flicker_counter(frame_array, sliding_window_size, threshold):
 
     # function to show the plot
     plt.show()
+    return trigger_sections
+
+    
